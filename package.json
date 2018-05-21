@@ -1,0 +1,28 @@
+{
+  "name": "ajv-demo",
+  "version": "1.0.0",
+  "description": "ajv使用方法demo示例",
+  "main": "baseValidate.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hello-sunbaixin/ajv-demo.git"
+  },
+  "keywords": [
+    "ajv"
+  ],
+  "author": "sunbaixin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hello-sunbaixin/ajv-demo/issues"
+  },
+  "homepage": "https://github.com/hello-sunbaixin/ajv-demo#readme",
+  "dependencies": {
+    "ajv": "^6.5.0",
+    "ajv-errors": "^1.0.0",
+    "async-validator": "^1.8.2",
+    "object-path": "^0.11.4"
+  }
+}

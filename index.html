@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>monaco-editor basic use</title>
+    <script src="https://shihao316558512.github.io/monaco-editor-demo/node_modules/monaco-editor/min/vs/loader.js"></script>
+    <script src="https://shihao316558512.github.io/monaco-editor-demo/node_modules/jquery/dist/jquery.min.js"></script>
+    <style>
+    body {
+        background-color: pink;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="container" style="height: 400px; width:400px;"></div>
+    <button onclick="GetEditorValue();">获取编辑器值</button>
+    <button onclick="ReCreateEditor();">重新创建编辑器</button>
+    <script>
+    var monacoEditor;
+    //init monaco
+    //const JSON_SCHEMAS = [{
+    //     "$id": "http://amis.baidu.com/schemas/dialog.json#",
+    //     "$schema": "http://json-schema.org/draft-06/schema#",
+    //     "description": "AMis Dialog 渲染器，格式说明。http://amis.baidu.com/docs/renderers#dialog",
+    //     "type": "object",
+    //     "properties": {
+
+    //         "initFetch": {
+    //             "type": "boolean",
+    //             "description": "是否默认就拉取？",
+    //             "default": true
+    //         }
+
+
+    //     },
+    //     "additionalProperties": false
+    // }].map(item => ({
+    //     uri: item['$id'] || item.id, // JSON-Schema draft-06 已经把 id 改名成 $id 了
+    //     schema: item
+    // }));
+
+    var id = "foo";
+    var JSON_SCHEMAS22 = [{
+        "id": "json1.json",
+        "type": "object",
+
+        "properties": {
+            "p1": {
+                "enum": ["v1", "v2"]
+            },
+            "p2": {
+                "$ref": "json2.json"
+            },
+            "p3": {
+                "type": "string",
+                "description": "这是一个组件容器",
+            }
+        }
+    },{
+        "id": "json2.json",
+        "type": "object",
+        "properties": {
+            "q1": {
+                "enum": ["x1", "x2"]
+            }
+        }
+    }]
+    .map((item) => ({
+        fileMatch: [id],
+        uri: item['id'],
+        schema: item
+    }))
+     console.log(JSON_SCHEMAS22);
+    var JSON_SCHEMAS = [{
+        uri: "json",
+        fileMatch: ["foo"],
+        schema: {
+            "$id": "json1.json",
+            type: "object",
+
+            properties: {
+                p1: {
+                    enum: ["v1", "v2"]
+                },
+                p2: {
+                    $ref: "json2.json"
+                },
+                p3: {
+                    type: "string",
+                    "description": "这是一个组件容器",
+                }
+            }
+        }
+    }, {
+        uri: "json2.json",
+        fileMatch: ["foo"],
+        schema: {
+            // "$id": "json24.json",
+            type: "object",
+            properties: {
+                q1: {
+                    enum: ["x1", "x2"]
+                }
+            }
+        }
+    }]
+    // console.log(JSON_SCHEMAS);
+    require.config({
+        paths: { 'vs': 'https://shihao316558512.github.io/monaco-editor-demo/node_modules/monaco-editor/min/vs' },
+        'vs/nls': {
+            availableLanguages: {
+                '*': 'zh-cn'
+            }
+        }
+    });
+    require(['vs/editor/editor.main'], function() {
+        var model = monaco.editor.createModel([
+            '{',
+            '    "p1": "v3",',
+            '    "p2": false,',
+            '    "q1": false',
+            "}"
+        ].join('\n'), "json", id);
+        monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+            allowComments: true,
+            schemas: JSON_SCHEMAS22,
+            validate: true
+        });
+        monacoEditor = monaco.editor.create(document.getElementById('container'), {
+            // value: [
+            //         '{',
+            //         '    "p1": "v3",',
+            //         '    "p2": false',
+            //         "}"
+            //     ].join('\n'),
+            language: 'json',
+            wordWrap: "on", //自动换行，注意大小写
+            wrappingIndent: "indent",
+            theme: "vs-dark", //"hc-dark"//"vs-dark"
+            selectOnLineNumbers: true,
+            folding: true,
+            automaticLayout: true,
+            model: model
+        });
+        monacoEditor.onDidChangeModelContent((e) => {
+            console.log(e);
+            console.log(monacoEditor.getValue())
+        });
+        monacoEditor.onDidBlurEditor((e) => {
+            console.log(e);
+        });
+    });
+
+    function ReCreateEditor() {
+        $("#container").children().remove();
+        require(['vs/editor/editor.main'], function() {
+            monacoEditor = monaco.editor.create(document.getElementById('container'), {
+                value: [
+                    '{',
+                    '    "p1": "v3",',
+                    '    "p2": false',
+                    "}"
+                ].join('\n'),
+                language: 'html',
+                wordWrap: "on", //自动换行，注意大小写
+                wrappingIndent: "indent"
+            });
+        });
+    }
+
+    function GetEditorValue() {
+        alert(monacoEditor.getValue());
+    }
+    </script>
+</body>
+
+</html>

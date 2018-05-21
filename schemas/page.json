@@ -1,0 +1,96 @@
+{
+    "$id": "page.json",
+    "description": "OpenWeb Page 渲染器",
+    "type": "object",
+    "definitions":
+    {
+        "stringOrNull":
+        {
+            "description": "字符或者 null",
+            "oneOf": [
+            {
+                "type": "string"
+            },
+            {
+                "type": "null"
+            }]
+        },
+        "string":
+        {
+            "description": "字符串格式",
+            "type": "string"
+        },
+        "container":
+        {
+            "oneOf": [
+            {
+                "$ref": "#/definitions/subRenderer"
+            },
+            {
+                "items":
+                {
+                    "$ref": "#/definitions/container"
+                },
+                "type": "array"
+            }]
+        },
+        "subRenderer":
+        {
+
+            "$id": "form.json",
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "allOf": [
+            {
+                "additionalProperties": false,
+                "patternProperties":
+                {
+                    "^(?:type|api|debug|name|initApi|initAsyncApi|initFetch|initSchemaFetch|initFinishedField|initCheckInterval|schemaApi|asyncApi|checkInterval|finishedField|primaryField|className|panelClassName|title|mode|horizontal|columnClassName|horizontalDeeper|controls|submitText|submitOnChange|collapsable|collapsable|data|wrapWithPanel|actions|fieldSet|target|tabs|footer|footerClassName|autoFocus|attachChanged|changedKey|changedTrueValue|changedFalseValue)$":
+                    {}
+                },
+                "properties":
+                {
+                    "$schema":
+                    {
+                        "format": "uri",
+                        "type": "string",
+                        "description": "绑定 JSON 格式说明，可忽略！"
+                    },
+                    "type":
+                    {
+                        "const": "form",
+                        "description": "指定为 Form 表单类型"
+                    }
+                },
+                "required": [
+                    "type"
+                ],
+                "type": "object"
+            }],
+            "description": "OpenWeb Form 渲染器",
+            "type": "object"
+        }
+    },
+    "properties":
+    {
+        "$schema":
+        {
+            "description": "绑定 JSON 格式说明，可忽略！",
+            "format": "uri",
+            "type": "string"
+        },
+        "body":
+        {
+            "items":
+            {
+                "$ref": "#/definitions/container"
+            },
+            "type": "array",
+            "title": "页面内容区域"
+        },
+        "title":
+        {
+            "$ref": "#/definitions/stringOrNull",
+            "description": "页面标题"
+        }
+    }
+}
